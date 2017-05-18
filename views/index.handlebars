@@ -1,0 +1,22 @@
+<h1>MONGO SCRAPER</h1>
+<div class="row">                               {{!-- Shell of index.handlebars so far --}}
+    <div class="top-line col-xs-2 col-md-2">
+        <h2>Scraper</h2>
+        {{#each }}
+            {{#unless this.}}
+            {{/unless}}             {{!-- End of unless this. --}}
+        {{/each}}               {{!-- End of each --}}
+    </div>
+
+    <div class="middle-section col-xs-6 col-md-3">
+    </div>
+
+    <div class="right-side col-xs-6 col-md-3">
+        <h2></h2>
+        {{#each }}
+            {{#if this.}}
+
+            {{/if}}             {{!-- End of unless --}}
+        {{/each}}               {{!-- End of each  --}}
+    </div>
+</div>

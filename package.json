@@ -1,0 +1,29 @@
+{
+  "name": "news-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MLangteau/news-scraper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MLangteau/news-scraper/issues"
+  },
+  "homepage": "https://github.com/MLangteau/news-scraper#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cheerio": "^0.22.0",
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0",
+    "mongojs": "^2.4.0",
+    "mongoose": "^4.9.9",
+    "request": "^2.81.0"
+  }
+}

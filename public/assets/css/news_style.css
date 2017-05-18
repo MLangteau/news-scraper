@@ -1,0 +1,8 @@
+body {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    background-attachment: fixed;
+    background-image: url('../img/phone-mouse.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
