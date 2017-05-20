@@ -81,12 +81,12 @@ app.set('view engine', 'handlebars');
 //require("./controllers/_controller")(app);
 
 // Main route (simple Message)
-app.get("/", function(req, res) {
+/*app.get("/", function(req, res) {
     res.send("App is running");
 //    res.render('index', {atc:articles});
 //    res.send(index.html);
 });
-
+*/
     app.get("/scrape", function(req, res) {
         console.log ("\n Grabbing every thread name and link from \n" + 
                     " from a website of my choice " + 
