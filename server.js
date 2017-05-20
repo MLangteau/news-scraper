@@ -7,9 +7,17 @@ var exphbs  = require('express-handlebars');
 // Require Mongoose ORM 
 var mongoose = require('mongoose');
 
-// Require request and cheerio. This makes the scraping possible
+// Require request and cheerio for scraping
 var request = require('request');
 var cheerio = require('cheerio');
+
+// Set mongoose to leverage built in JavaScript ES6 Promises
+mongoose.Promise = Promise;
+
+//  Set up API routes to make programs in the future easier
+//  require("./routes/apiRoutes.js")(app);                 ******************************
+//  Set up HTML routes to make programs in the future easier
+require("./routes/htmlRoutes.js")(app);
 
 // Require body-parser
 var bodyParser = require('body-parser');
@@ -25,7 +33,14 @@ const PORT = process.env.PORT || 3000;
 
 //  var conn = mongoose.createConnection('mongodb://[username:password@]host1[:port1][,host2[:port2],...
 //          [,hostN[:portN]]][/[database][?options]]', options);
-mongoose.connect('mongodb://localhost/newsScraper_db');  // or createConnection if more than one conn.
+  // or createConnection if more than one conn.
+
+if (process.env.MONGODB_URI) {
+    mongoose.connect(process.env.MONGODB_URI);
+}
+else {
+    mongoose.connect('mongodb://localhost/newsScraper');
+};
 
 // store mongoose connection to the db variable
 var db = mongoose.connection;
@@ -72,51 +87,50 @@ app.get("/", function(req, res) {
 //    res.send(index.html);
 });
 
-app.get("/scrape", function(req, res) {
-    console.log ("\n Grabbing every thread name and link from \n" + 
-                " from a website of my choice " + 
-                " ************ \n");
-    //  Making a request call for OCPS' main website
-    //  The callback's 3rd argument (body) is the website's HTML 
-    request("https://www.washingtonpost.com", function (error, response, html) {
-        //  save the html, loaded by cheerio, into $ variable
-        //  like a DOM of the html
-        var $ = cheerio.load(html);
+    app.get("/scrape", function(req, res) {
+        console.log ("\n Grabbing every thread name and link from \n" + 
+                    " from a website of my choice " + 
+                    " ************ \n");
+        //  Making a request call for OCPS' main website
+        //  The callback's 3rd argument (body) is the website's HTML 
+        request("https://www.washingtonpost.com", function (error, response, html) {
+            //  save the html, loaded by cheerio, into $ variable
+            //  like a DOM of the html
+            var $ = cheerio.load(html);
 
-        //  save the date scraped into this empty array
-        var result = {};
-        console.log("mrl");
+            //  save the date scraped into this empty array
+            var result = {};
+            console.log("mrl");
 
-        //  with cheerio, find each p-tag with the title class
-        //  (i is the index(iterator) and element is the current element)
-        $(".skin-card li").each(function(i, element) {
-            //  save the text of the current element (this) into the variable 
-            result.title = $(this).children("a").text();
+            //  with cheerio, find each p-tag with the title class
+            //  (i is the index(iterator) and element is the current element)
+            $(".skin-card li").each(function(i, element) {
+                //  save the text of the current element (this) into the variable 
+                result.title = $(this).children("a").text();
 
-            //  look at the current element's child element (its a-tags), 
-            //  then save the values for any href attributes 
-            result.link = $(element).children("a").attr("href");
+                //  look at the current element's child element (its a-tags), 
+                //  then save the values for any href attributes 
+                result.link = $(element).children("a").attr("href");
 
-            if (result.title && result.link) {
-            //  save these results in an object that we'll push into the results array
-                db.scrapedData.save({
-                    title: title,
-                    link: link
-                },
-                function (error, saved) {
+                //  This passes the result object defined above and uses the Article model to 
+                //  add/create a new entry
+                var entry = new Article(result);
+            
+                //  save these results in an object that we'll push into the results array
+                entry.save(function (error, doc) {
                   if (error) {
                       console.log(error);
                   }
                   else {
-                      console.log(saved);
+                      console.log(doc);
                   }
                 });
-            }
-
+            });
+            res.redirect("/");  // Important to send this or else!
         });
-
+        res.send("Scrape Complete");
     });
-});
+
 
 /*
 // Retrieve data from the db
