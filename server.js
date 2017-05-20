@@ -1,18 +1,18 @@
 // Scraping News Articles
 
 // Dependencies
-var express = require("express");
-var exphbs  = require("express-handlebars");
+var express = require('express');
+var exphbs  = require('express-handlebars');
 
 // Require Mongoose ORM 
 var mongoose = require('mongoose');
 
 // Require request and cheerio. This makes the scraping possible
-var request = require("request");
-var cheerio = require("cheerio");
+var request = require('request');
+var cheerio = require('cheerio');
 
 // Require body-parser
-var bodyParser = require("body-parser");
+var bodyParser = require('body-parser');
 
 // Initialize Express
 var app = express();
@@ -40,7 +40,6 @@ db.once("open", function(error) {
     console.log("Mongoose connection successful");
 });
 
-
 // Set up for the Express app to handle data parsing
 // Parses the text as JSON and exposes the resulting object on req.body.
 app.use(bodyParser.json());
@@ -58,10 +57,10 @@ app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 app.use(express.static(__dirname + "/public"));
 
 // store express-handlebars to the exphbs variable
-var exphbs = require("express-handlebars");
+var exphbs = require('express-handlebars');
 
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
 
 // Import routes and give the server access to them.
 //require("./controllers/_controller")(app);
@@ -69,7 +68,54 @@ app.set("view engine", "handlebars");
 // Main route (simple Message)
 app.get("/", function(req, res) {
     res.send("App is running");
+//    res.render('index', {atc:articles});
 //    res.send(index.html);
+});
+
+app.get("/scrape", function(req, res) {
+    console.log ("\n Grabbing every thread name and link from \n" + 
+                " from a website of my choice " + 
+                " ************ \n");
+    //  Making a request call for OCPS' main website
+    //  The callback's 3rd argument (body) is the website's HTML 
+    request("https://www.washingtonpost.com", function (error, response, html) {
+        //  save the html, loaded by cheerio, into $ variable
+        //  like a DOM of the html
+        var $ = cheerio.load(html);
+
+        //  save the date scraped into this empty array
+        var result = {};
+        console.log("mrl");
+
+        //  with cheerio, find each p-tag with the title class
+        //  (i is the index(iterator) and element is the current element)
+        $(".skin-card li").each(function(i, element) {
+            //  save the text of the current element (this) into the variable 
+            result.title = $(this).children("a").text();
+
+            //  look at the current element's child element (its a-tags), 
+            //  then save the values for any href attributes 
+            result.link = $(element).children("a").attr("href");
+
+            if (result.title && result.link) {
+            //  save these results in an object that we'll push into the results array
+                db.scrapedData.save({
+                    title: title,
+                    link: link
+                },
+                function (error, saved) {
+                  if (error) {
+                      console.log(error);
+                  }
+                  else {
+                      console.log(saved);
+                  }
+                });
+            }
+
+        });
+
+    });
 });
 
 /*
