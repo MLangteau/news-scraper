@@ -1,7 +1,12 @@
+'use strict';
+
 // Require mongoose
 var mongoose = require("mongoose");
 // Create a schema class
 var Schema = mongoose.Schema;
+
+mongoose.models = {};
+mongoose.modelSchema = {};
 
 // Create the Note schema
 var NoteSchema = new Schema({

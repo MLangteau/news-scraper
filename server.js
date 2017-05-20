@@ -2,10 +2,16 @@
 
 // Dependencies
 var express = require('express');
-var exphbs  = require('express-handlebars');
+
+// Require body-parser
+var bodyParser = require('body-parser');
 
 // Require Mongoose ORM 
 var mongoose = require('mongoose');
+
+// Requiring our models
+var Note = require("./models/note.js"); 
+var Article = require("./models/article.js");
 
 // Require request and cheerio for scraping
 var request = require('request');
@@ -14,19 +20,32 @@ var cheerio = require('cheerio');
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
-//  Set up API routes to make programs in the future easier
-//  require("./routes/apiRoutes.js")(app);                 ******************************
-//  Set up HTML routes to make programs in the future easier
-require("./routes/htmlRoutes.js")(app);
-
-// Require body-parser
-var bodyParser = require('body-parser');
-
 // Initialize Express
 var app = express();
 
 //  const PORT is necessary for Heroku deployment
 const PORT = process.env.PORT || 3000;
+
+// Set up for the Express app to handle data parsing
+// Parses the text as JSON and exposes the resulting object on req.body.
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//  bodyParser.text() reads the buffer as plain text and exposes the resulting string on req.body.
+app.use(bodyParser.text());
+app.use(bodyParser.json({ type: "application/vnd.api+json" }));
+
+// Serve static content for the app from the "public" directory in the application directory.
+ 
+//need to change from process.cwd() to  __dirname since not using sequelize (process.cwd() + 
+app.use(express.static("/public"));
+//  OR app.use(express.static(__dirname + "/public"));
+
+//  Set up API routes to make programs in the future easier
+require("./routes/apiRoutes.js")(app);
+//  Set up HTML routes to make programs in the future easier
+require("./routes/htmlRoutes.js")(app);
 
 // required for connection (both connect and creation connection take a mongodb://URL or 
 //    host, etc. options)
@@ -55,24 +74,9 @@ db.once("open", function(error) {
     console.log("Mongoose connection successful");
 });
 
-// Set up for the Express app to handle data parsing
-// Parses the text as JSON and exposes the resulting object on req.body.
-app.use(bodyParser.json());
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-//  bodyParser.text() reads the buffer as plain text and exposes the resulting string on req.body.
-app.use(bodyParser.text());
-app.use(bodyParser.json({ type: "application/vnd.api+json" }));
-
-// Serve static content for the app from the "public" directory in the application directory.
- 
-//need to change from process.cwd() to  __dirname since not using sequelize (process.cwd() + 
-//  OR app.use(express.static("/public"));
-app.use(express.static(__dirname + "/public"));
-
 // store express-handlebars to the exphbs variable
 var exphbs = require('express-handlebars');
+var Handlebars = require('handlebars');
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
@@ -87,6 +91,8 @@ app.set('view engine', 'handlebars');
 //    res.send(index.html);
 });
 */
+
+/*  dupl in apiRoutes
     app.get("/scrape", function(req, res) {
         console.log ("\n Grabbing every thread name and link from \n" + 
                     " from a website of my choice " + 
@@ -130,7 +136,7 @@ app.set('view engine', 'handlebars');
         });
         res.send("Scrape Complete");
     });
-
+*/
 
 /*
 // Retrieve data from the db

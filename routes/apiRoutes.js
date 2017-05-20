@@ -8,8 +8,8 @@ var mongoose = require('mongoose');
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
-var Note = require("../models/note");  // .js is optional for both
-var Article = require("../models/article"); 
+var Note = require("../models/note.js");
+var Article = require("../models/article.js"); 
 
 //  API routes
 module.exports = function(app) {
