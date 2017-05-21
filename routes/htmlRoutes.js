@@ -1,7 +1,7 @@
 var path = require("path");
 // Requiring our models
-var Note = require("../models/Note");  // .js is optional for both
-var Article = require("../models/Article");
+var Note = require("../models/note.js");
+var Article = require("../models/article.js");
 
 // These are the proper routes (html) that is presented to the user
 module.exports = function(app) {

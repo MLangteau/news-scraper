@@ -1,7 +1,15 @@
 <div class="container">
     <h2>Note scraper</h2>
     <div id="articles" class="col-xs-6 col-md-3">
-        
+       <ul>
+       		{{#each articles}}
+	       		<li>
+	       			{{this.title}}
+	       			<br>
+	       			{{this.link}}
+	       		</li>
+       		{{/each}}
+       	</ul>
     </div>
 
     <div id="notes" class="col-xs-6 col-md-3">
