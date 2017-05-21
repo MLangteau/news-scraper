@@ -20,10 +20,7 @@ module.exports = function(app) {
                     " ************ \n");
         //  Making a request call for OCPS' main website
         //  The callback's 3rd argument (body) is the website's HTML 
-//request("http://www.espn.com/", function(error, response, html) {
     request("http://www.ufgator.com/", function(error, response, html) {
-//        request("https://www.ocps.net", function (error, response, html) {
-//request("https://www.washingtonpost.com", function (error, response, html) {
             //  save the html, loaded by cheerio, into $ variable
             //  like a DOM of the html
             var $ = cheerio.load(html);
