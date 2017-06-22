@@ -11,7 +11,8 @@
                             <li>
                                 {{this.title}}
                                 <a href="http://www.ufgator.com"{{this.link}}>READ</a>
-                                <button class="btn btn-info addNote" data-id="this._id"></button>
+                                <!--<button class="btn btn-info addNote" data-id="this._id">Add Note</button>-->
+                                <a href="#" id="{{this.id}}" aria-hidden="true" data-toggle="modal" data-target="#artNoteModal" type="button" class="btn btn-default" data-whatever="@mdo">Notes</a>
                             </li>
                             <hr>
                         {{/each}}
@@ -24,3 +25,32 @@
             </div>
     </div>
 </div>
+
+<!-- Add Article Note Modal -->
+<div class="modal fade" id="artNoteModal" tabindex="-1" role="dialog" aria-labelledby="artNoteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title" align="center" id="artNoteModalLabel">Note for Article</h3>
+            </div>
+            <div class="modal-body">
+                <div class="notes-form">
+                    <form action="/addNotes" method="POST" class="create-Note">
+                        <div class="form-group">
+                            <input type="hidden" name="articleId" value={{this._id}} name="{{this._id}}">
+                            <p>Type your note here:</p>
+                            <textarea id="note" name="noteBody" rows="4" cols="40"></textarea>
+                        </div>
+                        <button type="submit" id="submit" class="btn btn-default btn-md">Add it!</button>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div> <!-- modal-body -->
+        </div> <!-- div modal-content -->
+    </div> <!-- div modal-dialog -->
+</div>  <!-- div artNoteModal -->
