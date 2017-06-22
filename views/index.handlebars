@@ -1,19 +1,26 @@
 <div class="container">
     <h2>Note scraper</h2>
-    <div id="articles" class="col-xs-6 col-md-3">
-       <ul>
-       		{{#each articles}}
-	       		<li>
-	       			{{this.title}}
-	       			<br>
-	       			{{this.link}}
-	       		</li>
-       		{{/each}}
-       	</ul>
-    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title text-center">Saved Articles</h3>
+        </div>
+            <div class="panel-body">
+                <div id="articles" class="col-xs-12">
+                   <ul>
+                        {{#each articles}}
+                            <li>
+                                {{this.title}}
+                                <a href="http://www.ufgator.com"{{this.link}}>READ</a>
+                                <button class="btn btn-info addNote" data-id="this._id"></button>
+                            </li>
+                            <hr>
+                        {{/each}}
+                    </ul>
+                </div>
 
-    <div id="notes" class="col-xs-6 col-md-3">
-        
+                <div id="notes" class="col-md-3">
+                        <!--{{notes}}-->
+                </div>
+            </div>
     </div>
-
 </div>

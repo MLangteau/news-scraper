@@ -55,45 +55,52 @@ module.exports = function(app) {
                   }
                 });
             });
-            res.redirect("/");  // Important to send this or else!
+            res.redirect("/articles");  // Important to send this or else!
         });
-        res.send("Scrape Complete");
-    });
+      // res.send("Scrape Complete");
+    });  // end of app.get("/scrape"...)
 
     // This will get the articles we scraped from the mongoDB
     app.get("/articles", function(req, res) {
       // Grab every doc in the Articles array
-      Article.find({}, function(error, doc) {
-        // Log any errors
+      Article.find({}, function(error, data) {
+        // send errors to browser
         if (error) {
-          console.log(error);
+          res.send(error);
         }
-        // Or send the doc to the browser as a json object
+        // Or send the doc to the browser
         else {
-          res.json(doc);
+            var handlebrsObject = {
+                articles: data      // articles is defined in the html
+            };
+            //  using the index.handlebars file for displaying the object
+            res.render("index", handlebrsObject);
         }
-      });
+        })
     });
 
     // Grab an article by it's ObjectId
     app.get("/articles/:id", function(req, res) {
       // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-      Article.findOne({ "_id": req.params.id })
+      Article.findOne({ _id: req.params.id }, function(error, doc){
+          if (error) {
+              res.send(error);
+          }
+      })
       // ..and populate all of the notes associated with it
       .populate("note")
       // now, execute our query
       .exec(function(error, doc) {
-        // Log any errors
-        if (error) {
-          console.log(error);
-        }
-        // Otherwise, send the doc to the browser as a json object
-        else {
-          res.json(doc);
-        }
+          // send errors to browser
+          if (error) {
+              res.send(error);
+          }
+          // Or send the doc to the browser (with notes)
+          else {
+              res.send(doc);
+          }
       });
-    });
-
+    });  //  end of app.get("/articles/:id"...)
 
     // Create a new note or replace an existing note
     app.post("/articles/:id", function(req, res) {
@@ -104,25 +111,42 @@ module.exports = function(app) {
       newNote.save(function(error, doc) {
         // Log any errors
         if (error) {
-          console.log(error);
+          res.send(error);
         }
         // Otherwise
         else {
           // Use the article id to find and update it's note
-          Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
+          Article.findOneAndUpdate({ _id: req.params.id }, { "note": doc._id })
           // Execute the above query
           .exec(function(err, doc) {
             // Log any errors
-            if (err) {
-              console.log(err);
-            }
-            else {
-              // Or send the document to the browser
-              res.send(doc);
-            }
+              // send errors to browser
+              if (error) {
+                  res.send(error);
+              }
+              // Or send the doc to the browser (with notes)
+              else {
+                  res.send(doc);
+              }
           });
         }
       });
-    });
+    });  // end of app.post("/articles/:id"...)
 
+    // Delete all articles (empty the database)
+    app.get("/deleteAll", function(req, res) {
+        // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+        Article.remove({}, function(error){
+            if (error) {
+                res.status(500).json({
+                    success: false,
+                    message: "delete failed"
+                });
+            }
+            else {
+                console.log("delete all articles confirmed");
+                res.redirect('/');
+            }
+        })
+    });  // end of app.get("/deleteAll"...)
 };  //  End of module.exports
