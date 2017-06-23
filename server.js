@@ -81,8 +81,8 @@ var Handlebars = require('handlebars');
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
-// Listen on port 3000
-app.listen(3000, function() {
-  console.log("App running on port 3000!");
-});
+// Listener
+app.listen(PORT, function() {
+    console.log("App listening on PORT: " + PORT);
+})
 
