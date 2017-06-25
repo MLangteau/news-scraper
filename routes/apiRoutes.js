@@ -104,10 +104,8 @@ module.exports = function(app) {
 
     // Create a new note or replace an existing note
     app.post("/addNote", function(req, res) {
-      console.log("mrl2 in app.post(/addNotes): this is req.body", req.body);
-      // Create a new note and pass the req.body to the entry
+      // Create a new note and pass the req.body to the newNote
       var newNote = new Note(req.body);
-      console.log("newNote: ", newNote);
       // And save the new note the db
       newNote.save(function(error, doc) {
         // Log any errors
@@ -117,8 +115,6 @@ module.exports = function(app) {
         // Otherwise
         else {
           // Use the article id to find and update it's note
-          console.log("mrl 3 findOneAndUpdate: req.body", req.body, " doc._id: ", doc._id);
-          // Article.findOneAndUpdate({ _id: req.body.id }, { "note": doc._id }),
             Article.findOneAndUpdate({_id: req.body._id}, { $push: {"note": doc.id} },
                 // Execute the above query
                 function(err, doc2) {

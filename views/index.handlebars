@@ -41,14 +41,11 @@
                 <div class="notes-form">
 
                     <form action="/addNote" method="POST" class="create-Note">
-                        <input type="hidden" name="articleId" value={{this.id}} _id>
+                        <input type="hidden" name="articleId" value={{this.id}}>
+                        <input type="hidden" name="title" value={{this.title}}>
                         <div class="form-group">
                             <p><label for="body">Type your note here:</label></p>
                             <textarea id="body" name="body" rows="4" cols="40"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="initials" name="initials">
-                            <p>Enter your initials here:</p>
                         </div>
                         <button type="submit" id="submit" class="btn btn-default btn-md">Add Note!</button>
                     </form>

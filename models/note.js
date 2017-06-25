@@ -15,7 +15,7 @@ var NoteSchema = new Schema({
     type: String
   },
   // Just a string
-  initials: {
+  title: {
     type: String
   }
 });
