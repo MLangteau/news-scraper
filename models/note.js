@@ -11,11 +11,11 @@ mongoose.modelSchema = {};
 // Create the Note schema
 var NoteSchema = new Schema({
   // Just a string
-  title: {
+  body: {
     type: String
   },
   // Just a string
-  body: {
+  initials: {
     type: String
   }
 });
